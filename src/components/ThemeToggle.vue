@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Sun, Moon } from 'lucide-vue-next';
 
 const isDark = ref(true);
@@ -24,15 +24,9 @@ const applyTheme = () => {
   const root = document.documentElement;
   
   if (isDark.value) {
-    root.style.setProperty('--bg-primary', '#050505');
-    root.style.setProperty('--bg-secondary', '#080808');
-    root.style.setProperty('--text-primary', '#ffffff');
-    root.style.setProperty('--text-secondary', '#a0a0a0');
+    root.classList.add('dark');
   } else {
-    root.style.setProperty('--bg-primary', '#f5f5f5');
-    root.style.setProperty('--bg-secondary', '#ffffff');
-    root.style.setProperty('--text-primary', '#000000');
-    root.style.setProperty('--text-secondary', '#404040');
+    root.classList.remove('dark');
   }
   
   // Save preference

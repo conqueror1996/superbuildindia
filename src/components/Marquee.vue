@@ -1,29 +1,67 @@
 <template>
-  <div class="relative flex overflow-x-hidden py-4 bg-[#FF4D00] text-black border-y-2 border-black transform -skew-y-1">
-    <div :class="`animate-marquee whitespace-nowrap flex gap-8 ${direction === 'right' ? 'direction-reverse' : ''}`">
-      <span v-for="i in 10" :key="i" class="font-mono text-xl font-black tracking-widest uppercase flex items-center gap-4">
-        {{ text }} <Hexagon :size="16" fill="black" />
-      </span>
-    </div>
-    <div :class="`absolute top-0 animate-marquee2 whitespace-nowrap flex gap-8 ${direction === 'right' ? 'direction-reverse' : ''} py-4`">
-      <span v-for="i in 10" :key="i" class="font-mono text-xl font-black tracking-widest uppercase flex items-center gap-4">
-        {{ text }} <Hexagon :size="16" fill="black" />
-      </span>
+  <div class="py-24 bg-charcoal border-y border-white/5 relative z-20">
+    <div class="container mx-auto px-6 lg:px-12">
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-white/5 border border-white/5">
+        <div 
+          v-for="(item, i) in items" 
+          :key="i"
+          class="group bg-charcoal p-8 lg:p-12 min-h-[300px] flex flex-col justify-between hover:bg-neutral-900 transition-colors duration-500 cursor-pointer border-r border-b border-white/5"
+        >
+          <!-- Icon Top -->
+          <div class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-bone group-hover:bg-copper group-hover:border-copper group-hover:text-white transition-all duration-300">
+            <component :is="item.icon" class="w-5 h-5" />
+          </div>
+          
+          <!-- Content Bottom -->
+          <div>
+            <h3 class="font-serif text-2xl text-bone mb-4">{{ item.title }}</h3>
+            <p class="font-sans text-sm text-neutral-500 leading-relaxed opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-75">
+              {{ item.desc }}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { Hexagon } from 'lucide-vue-next';
+import { Ruler, Anchor,  Zap, Layers } from 'lucide-vue-next';
 
-defineProps({
-  text: {
-    type: String,
-    required: true
+const items = [
+  { 
+    title: 'Construction', 
+    desc: 'High-grade execution for commercial and residential landmarks.',
+    icon: Layers
   },
-  direction: {
-    type: String,
-    default: 'left'
+  { 
+    title: 'Architecture', 
+    desc: 'Design-first approach integrating aesthetics with structural integrity.',
+    icon: Ruler
+  },
+  { 
+    title: 'Engineering', 
+    desc: 'Complex structural solutions for challenging environments.',
+    icon: Zap
+  },
+  { 
+    title: 'Development', 
+    desc: 'End-to-end project lifecycle management from land to handover.',
+    icon: Anchor
   }
-});
+];
 </script>
+<style scoped>
+.text-stroke-white {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+</style>

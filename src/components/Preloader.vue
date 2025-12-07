@@ -1,48 +1,57 @@
 <template>
-  <div class="fixed inset-0 bg-black z-[9999] flex flex-col justify-between p-8 text-[#FF4D00] font-mono select-none">
-    <div class="flex justify-between uppercase text-xs tracking-widest opacity-50">
-      <span>System_Boot_Sequence</span>
-      <span>ID: {{ hex }}</span>
-    </div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-      <div class="text-[15vw] font-black leading-none opacity-20 blur-sm animate-pulse">
-        {{ progress }}%
+  <div 
+    class="preloader fixed inset-0 z-[10000] flex items-center justify-center bg-neutral-900 text-white overflow-hidden"
+    v-if="!isComplete"
+  >
+    <div class="flex flex-col items-center gap-4">
+      <div class="overflow-hidden">
+        <h1 class="preloader-text font-sans text-9xl font-bold tracking-tighter translate-y-full">
+          SUPERBUILD
+        </h1>
       </div>
-      <div class="text-4xl font-bold mt-[-2vw] relative z-10 mix-blend-overlay text-white">
-        LOADING REALITY
+      <div class="w-64 h-px bg-neutral-800 relative overflow-hidden">
+        <div class="preloader-bar absolute top-0 left-0 h-full bg-white w-full -translate-x-full"></div>
       </div>
-    </div>
-    <div class="w-full bg-[#111] h-[2px]">
-      <div 
-        class="h-full bg-[#FF4D00] shadow-[0_0_15px_#FF4D00]"
-        :style="{ width: `${progress}%`, transition: 'width 0.1s linear' }"
-      ></div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import gsap from 'gsap';
 
-const emit = defineEmits(['complete']);
-
-const progress = ref(0);
-const hex = ref('000000');
-let interval = null;
+const isComplete = ref(false);
 
 onMounted(() => {
-  interval = setInterval(() => {
-    if (progress.value >= 100) {
-      clearInterval(interval);
-      setTimeout(() => emit('complete'), 800);
-      return;
+  const tl = gsap.timeline({
+    onComplete: () => {
+      // Don't remove immediately to allow exit animation
+      gsap.to('.preloader', {
+        yPercent: -100,
+        duration: 0.8,
+        ease: 'power4.inOut',
+        onComplete: () => {
+          isComplete.value = true;
+        }
+      });
     }
-    hex.value = Math.floor(Math.random() * 16777215).toString(16);
-    progress.value += Math.floor(Math.random() * 5) + 1;
-  }, 100);
-});
+  });
 
-onUnmounted(() => {
-  if (interval) clearInterval(interval);
+  tl.to('.preloader-text', {
+    y: 0,
+    duration: 1,
+    ease: 'power4.out',
+  })
+  .to('.preloader-bar', {
+    x: 0,
+    duration: 1.5,
+    ease: 'power2.inOut',
+  }, '-=0.5')
+  .to('.preloader-text', {
+    y: '-100%',
+    duration: 0.8,
+    ease: 'power3.in',
+    delay: 0.2
+  });
 });
 </script>

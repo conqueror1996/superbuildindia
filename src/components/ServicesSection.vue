@@ -1,53 +1,50 @@
 <template>
-  <section id="capabilities" class="bg-[#080808] text-white py-32 border-t border-white/10 relative overflow-hidden">
-    <!-- Background Image Reveal -->
-    <div class="absolute inset-0 z-0 opacity-20 transition-all duration-700 ease-out pointer-events-none">
-      <div 
-        v-if="hoveredImage"
-        class="absolute inset-0 bg-cover bg-center grayscale scale-105 transition-transform duration-[2s]"
-        :style="{ backgroundImage: `url(${hoveredImage})` }"
-      ></div>
-      <div class="absolute inset-0 bg-[#080808]/80"></div>
-    </div>
-
-    <div class="absolute right-0 top-0 h-full w-[1px] bg-white/10"></div>
-    <div class="absolute left-12 top-0 h-full w-[1px] bg-white/10 hidden md:block"></div>
-    
-    <div class="container mx-auto px-6 pl-0 md:pl-24 relative z-10">
-      <div class="mb-20">
-        <span class="font-mono text-[#FF4D00] text-sm block mb-4">/// CAPABILITIES_DB</span>
-        <h2 class="font-syne text-6xl md:text-8xl font-bold uppercase">Engineering <br/> Supremacy</h2>
+  <section id="capabilities" class="py-32 lg:py-48 bg-bone relative z-20">
+    <div class="container mx-auto px-6 lg:px-12">
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
+        <div class="max-w-xl">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="w-1.5 h-1.5 bg-charcoal rounded-full"></span>
+            <span class="font-mono text-xs tracking-widest text-concrete uppercase">Capabilities</span>
+          </div>
+          <h2 class="font-serif text-5xl lg:text-7xl font-medium tracking-tight text-charcoal leading-[1.1]">
+            Our Expertise.
+          </h2>
+        </div>
+        <div class="hidden md:block text-right">
+          <span class="font-mono text-xs tracking-widest text-concrete uppercase">Strategic Services</span>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 border-t border-white/10">
+      <!-- Services List -->
+      <div 
+        ref="listRef" 
+        class="flex flex-col border-t border-charcoal/20"
+        @mouseenter="isListHovered = true"
+        @mouseleave="isListHovered = false"
+      >
         <div 
           v-for="(service, index) in services" 
           :key="index" 
-          class="group grid grid-cols-1 md:grid-cols-12 gap-8 py-16 border-b border-white/10 hover:bg-[#FF4D00] transition-colors duration-300 cursor-hover"
-          @mouseenter="hoveredImage = service.img"
-          @mouseleave="hoveredImage = null"
+          class="service-row group relative py-12 border-b border-charcoal/20 cursor-pointer transition-all duration-500 ease-apple-ease hover:px-8 hover:bg-white"
+          :class="{ 'opacity-40': isListHovered && hoveredIndex !== index }"
+          @mouseenter="hoveredIndex = index"
+          @mouseleave="hoveredIndex = null"
         >
-          <div class="md:col-span-2 font-mono text-4xl text-gray-600 group-hover:text-black transition-colors">
-            0{{ index + 1 }}
-          </div>
-          <div class="md:col-span-6">
-            <h3 class="font-syne text-4xl md:text-5xl font-bold mb-4 group-hover:text-black transition-colors">
-              {{ service.title }}
-            </h3>
-            <p class="font-mono text-gray-400 text-sm group-hover:text-black/80 max-w-md transition-colors">
-              {{ service.desc }}
-            </p>
-          </div>
-          <div class="md:col-span-4 flex flex-col justify-between items-end">
-            <ArrowUpRight class="w-12 h-12 text-gray-600 group-hover:text-black group-hover:rotate-45 transition-transform duration-300" />
-            <div class="flex gap-2 mt-8 md:mt-0">
-              <span 
-                v-for="(spec, i) in service.specs" 
-                :key="i" 
-                class="font-mono text-[9px] border border-gray-700 group-hover:border-black px-2 py-1 uppercase group-hover:text-black transition-colors"
-              >
-                {{ spec }}
-              </span>
+          <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-6 z-10 relative">
+            <div class="md:w-1/3">
+              <span class="font-mono text-xs text-copper tracking-widest">0{{ index + 1 }}</span>
+            </div>
+            
+            <div class="md:w-2/3 flex justify-between items-center">
+              <h3 class="font-sans text-3xl lg:text-5xl font-medium text-charcoal tracking-tight transition-transform duration-500 group-hover:translate-x-4">
+                {{ service.title }}
+              </h3>
+              
+              <div class="w-12 h-12 rounded-full border border-charcoal/20 flex items-center justify-center opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
+                <ArrowRight class="w-5 h-5 text-charcoal -rotate-45" />
+              </div>
             </div>
           </div>
         </div>
@@ -57,10 +54,42 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { ArrowUpRight } from 'lucide-vue-next';
-import { SERVICES } from '../data.js';
+import { ArrowRight } from 'lucide-vue-next';
+import { onMounted, ref } from 'vue';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const services = SERVICES;
-const hoveredImage = ref(null);
+gsap.registerPlugin(ScrollTrigger);
+
+const listRef = ref(null);
+const isListHovered = ref(false);
+const hoveredIndex = ref(null);
+
+const services = [
+  { title: 'Commercial Construction' },
+  { title: 'Luxury Residential' },
+  { title: 'Interior Execution' },
+  { title: 'Project Management' },
+  { title: 'Structural Planning' },
+  { title: 'Restoration' }
+];
+
+onMounted(() => {
+  const rows = listRef.value.querySelectorAll('.service-row');
+  
+  gsap.fromTo(rows, 
+    { y: 50, opacity: 0 },
+    {
+      y: 0,
+      opacity: 1,
+      duration: 1,
+      stagger: 0.1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: listRef.value,
+        start: 'top 85%',
+      }
+    }
+  );
+});
 </script>

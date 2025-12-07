@@ -9,8 +9,12 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "vue": "^3.4.21",
-        "lucide-vue-next": "^0.344.0"
+        "@studio-freight/lenis": "^1.0.42",
+        "@vueuse/core": "^14.1.0",
+        "gsap": "^3.13.0",
+        "lucide-vue-next": "^0.344.0",
+        "split-type": "^0.3.4",
+        "vue": "^3.4.21"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^5.0.4",

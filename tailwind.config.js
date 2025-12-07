@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: 'class',
     content: [
         "./index.html",
         "./src/**/*.{vue,js,ts,jsx,tsx}",
@@ -7,8 +8,20 @@ export default {
     theme: {
         extend: {
             fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+                serif: ['Playfair Display', 'serif'],
+                mono: ['IBM Plex Mono', 'monospace'],
                 syne: ['Syne', 'sans-serif'],
-                mono: ['Space Mono', 'monospace'],
+            },
+            colors: {
+                bone: '#F2F2F0',
+                charcoal: '#0D0D0D',
+                copper: '#B4743A',
+                concrete: '#9FA3A7',
+            },
+            transitionTimingFunction: {
+                'apple-ease': 'cubic-bezier(0.25, 1, 0.5, 1)',
+                'expo': 'cubic-bezier(0.19, 1, 0.22, 1)',
             },
             animation: {
                 'marquee': 'marquee 20s linear infinite',
